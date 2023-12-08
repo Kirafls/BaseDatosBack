@@ -19,7 +19,7 @@ const connection =mysql.createConnection({
     host:"localhost",
     user:"root",
     password:"",
-    database:"dbbeca",
+    database:"bd",
 });
 
 connection.connect((err)=>{
@@ -48,6 +48,66 @@ app.post("/login",(req,res)=>{
         res.send(result);
     })
 })
+
+app.post('/agregarDocumento', (req, res) => {
+    const { nombreDocumento, descripcionDocumento, descripcionSolicitud, fechaSolicitud, comentarios, tipobeca } = req.body;
+  
+    const sql = `INSERT INTO documentos (Nombre, Descripcion) VALUES (?, ?)`;
+  
+    connection.query(sql, [nombreDocumento, descripcionDocumento], (err, result) => {
+      if (err) {
+        console.error('Error al agregar el documento:', err);
+        return res.status(500).send('Error interno del servidor');
+      }
+      console.log('Documento agregado correctamente');
+    });
+  
+    const sql2 = `INSERT INTO tipo_beca (Nombre, Descripcion) VALUES (?, ?)`;
+    const nombreTipoBeca = (tipobeca === '1') ? 'Calificacion' : 'Deportes';
+    connection.query(sql2, [nombreTipoBeca, descripcionSolicitud], (err, result) => {
+      if (err) {
+        console.error('Error al agregar el documento:', err);
+        return res.status(500).send('Error interno del servidor');
+      }
+      console.log('Documento agregado correctamente');
+      res.status(200).send('Documento agregado correctamente');
+    });
+  });
+
+  app.get('/mostrarDocumentos', (req, res) => {
+    const sql = 'SELECT beca.*, tipo_beca.Nombre AS TipoBeca FROM beca INNER JOIN tipo_beca ON beca.id_Tipo = tipo_beca.id_Tipo';
+    
+    connection.query(sql, (err, result) => {
+        if (err) {
+            console.error('Error al obtener becas:', err);
+            res.status(500).send('Error interno del servidor');
+        } else {
+            res.status(200).json(result);
+        }
+    });
+});
+
+
+
+// En tu servicio de Express
+app.delete('/eliminarDocumento/:id', (req, res) => {
+    const idDocumento = req.params.id;
+    const sql = 'DELETE FROM documentos WHERE id_Documentos = ?'; // Ajusta según la estructura de tu tabla
+    const sql2= 'DELETE FROM documentos WHERE id_Tipo = ?';
+    connection.query(sql, [idDocumento], (err, result) => {
+        if (err) {
+            console.error('Error al eliminar documento:', err);
+            res.status(500).send('Error interno del servidor');
+        } else {
+            console.log('Documento eliminado correctamente');
+            res.status(200).send('Documento eliminado correctamente');
+        }
+    });
+
+});
+
+
+
 //Requiere actualizacion con el nuevo codigo 
 /*app.post("/nuevo",(req,res)=>{
     let nombre=req.body.nombre;
