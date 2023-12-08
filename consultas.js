@@ -6,13 +6,15 @@ function login(conection,data,callback){
 }
 function registro(conection,data,callback){
     let insertQuery="INSERT INTO `cuenta`(`id_Cuenta`, `id_Estudiante`, `saldo`, `contraseña`, `fecha_creacion`) VALUES (?,?,?,?,?)";
-
 }
+<<<<<<< HEAD
 
 
 
 
 
+=======
+>>>>>>> a0454a7d1879bbed33d22246671de00290c49d21
 /*function nuevo(conection,data,callback){
     let insertQuery="INSERT INTO `user`(`Nombre`, `Apellido`, `Prepa`, `Carrera`, `Fecha_na`, `Genero`, `Promedio`) VALUES (?,?,?,?,?,?,?)";
     let query =mysql.format(insertQuery, [data.nombre,data.apellido,data.prepa,data.carrera,data.fecha,data.genero,data.promedio]);
